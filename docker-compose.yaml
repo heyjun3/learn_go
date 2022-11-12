@@ -1,0 +1,7 @@
+version: '3'
+services:
+  golang:
+    image: golang:1.9.3
+    volumes: 
+      - ./:/src
+    entrypoint: tail -f /dev/null
