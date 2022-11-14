@@ -7,7 +7,77 @@ import (
 )
 
 func main() {
-	defineQ1()
+	stmtQ()
+}
+
+func stmtQ() {
+	l := []int{100, 300 ,323, 11, 21, 2, 4, 5, 6}
+	var min int
+	for i, v := range l{
+		if i == 0{
+			min = v
+			continue
+		}
+		if min > v{
+			min = v
+		}
+
+	}
+	fmt.Println(min)
+
+	m := map[string]int{
+		"apple": 200,
+		"banana": 300,
+		"grapes": 150,
+		"orange": 100,
+		"papaya": 1000,
+		"kiwi": 90,
+	}
+	var sum int
+	for _, v := range m{
+		sum += v
+	}
+	fmt.Println(sum)
+}
+
+func loop() {
+	for i := 0; i < 10; i++ {
+		fmt.Println(i)
+	}
+	sum := 0
+	// for ; sum < 10 ; {
+	// 	sum += 2
+	// 	fmt.Println(sum)
+	// }
+	for sum < 10 {
+		sum += 2
+		fmt.Println(sum)
+	}
+	l := []string{"python", "go", "ruby", "java"}
+	for i := 0; i < len(l); i++ {
+		fmt.Println(i, l[i])
+	}
+	for i, v := range l {
+		fmt.Println(i, v)
+	}
+	m := map[string]int{"a": 1, "b": 2, "c": 3}
+	for k, v := range m{
+		fmt.Println(k, v)
+	}
+	for k := range m{
+		fmt.Println(k)
+	}
+	for _, v := range m{
+		fmt.Println(v)
+	}
+}
+
+func by2(num int) string {
+	if num % 2 == 0{
+		return "ok"
+	}else{
+		return "no"
+	}
 }
 
 func defineQ1() {
