@@ -7,7 +7,25 @@ import (
 )
 
 func main() {
-	stmtQ()
+	var i int = 100
+    var j int = 200
+    var p1 *int
+    var p2 *int
+    p1 = &i
+    p2 = &j
+    i = *p1 + *p2
+    p2 = p1
+	fmt.Println(p2, &i)
+    j = *p2 + i
+    fmt.Println(j)
+}
+
+func point() {
+	n := 100
+	fmt.Println(n)
+	fmt.Println(*&n)
+	var i *int = &n
+	fmt.Println(i)
 }
 
 func stmtQ() {
