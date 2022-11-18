@@ -7,17 +7,54 @@ import (
 )
 
 func main() {
-	var i int = 100
-    var j int = 200
-    var p1 *int
-    var p2 *int
-    p1 = &i
-    p2 = &j
-    i = *p1 + *p2
-    p2 = p1
-	fmt.Println(p2, &i)
-    j = *p2 + i
-    fmt.Println(j)
+	v := Vertex{3, 4}
+	fmt.Println(v)
+}
+
+type Vertex struct {
+	X, Y int
+}
+
+func (v Vertex) String() string{
+	return fmt.Sprintf("X is %v! Y is %v!", v.X, v.Y)
+}
+
+func (v *Vertex) Plus() int {
+	return v.X + v.Y
+}
+
+type Human interface {
+	Say()
+}
+
+type Person struct {
+	Name string
+}
+
+func (p Person) Say() {
+	fmt.Println(p.Name)
+}
+
+type Squre struct {
+	x int
+	y int
+}
+
+func (s *Squre) Area() int{
+	return s.x * s.y
+}
+
+type D3 struct {
+	Squre
+	z int
+}
+
+func (d *D3) Area3D() int {
+	return d.x * d.y * d.z
+}
+
+func New(x, y, z int) *D3 {
+	return &D3{Squre{x, y}, z}
 }
 
 func point() {
