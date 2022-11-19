@@ -4,11 +4,103 @@ import (
 	"fmt"
 	"os/user"
 	"time"
+	"sync"
 )
 
 func main() {
-	v := Vertex{3, 4}
-	fmt.Println(v)
+	words := []string{"test1!", "test2!", "test3!", "test4!"}
+	c := make(chan string)
+	go goroutine1(words, c)
+	for w := range c {
+		fmt.Println(w)
+	}
+}
+
+func goroutine1(words []string, c chan<- string) {
+	defer close(c)
+	sum := ""
+	for _, v := range words {
+		sum += v
+		c <- sum
+	}
+}
+
+func main1() {
+	c := make(map[string]int)
+	// c := Counter{v: make(map[string]int)}
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func(wg *sync.WaitGroup) {
+		defer wg.Done()
+		for i := 0; i < 10; i++ {
+			c["key"] += 1
+			// c.Inc("key")
+		}
+	}(&wg)
+	wg.Add(1)
+	go func(wg *sync.WaitGroup) {
+		defer wg.Done()
+		for i := 0; i < 10; i++ {
+			// c.Inc("key")
+			c["key"] += 1 
+		}
+	}(&wg)
+	// time.Sleep(1 * time.Second)
+	wg.Wait()
+	fmt.Println(c)
+	// fmt.Println(c.Value("key"))
+}
+
+type Counter struct {
+	v map[string]int
+	mux sync.Mutex
+}
+
+func (c *Counter) Inc(key string) {
+	c.mux.Lock()
+	defer c.mux.Unlock()
+	c.v[key]++
+}
+
+func (c *Counter) Value(key string) int{
+	c.mux.Lock()
+	defer c.mux.Unlock()
+	return c.v[key]
+}
+
+func producer(c chan int, i int) {
+	c <- i * 2
+}
+
+func consumer(c chan int, wg *sync.WaitGroup) {
+	for i := range c {
+		func () {
+			defer wg.Done()
+			fmt.Println(i * 1000)
+		}()
+	}
+}
+
+func goroutine(s []int, c chan int) {
+	sum := 0
+	for i, v := range s {
+		sum += i * v
+		c <- sum
+	}
+	close(c)
+}
+func routine(s string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i:=0; i < 10; i++ {
+		fmt.Println(s)
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+func normal(s string) {
+	for i:=0; i < 10; i++ {
+		fmt.Println(s)
+		time.Sleep(100 * time.Millisecond)
+	}
 }
 
 type Vertex struct {
