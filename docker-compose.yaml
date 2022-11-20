@@ -3,5 +3,5 @@ services:
   golang:
     image: golang:1.19.3
     volumes: 
-      - ./:/root/src
+      - ./:/root/myproject
     entrypoint: tail -f /dev/null
