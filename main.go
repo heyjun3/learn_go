@@ -2,13 +2,73 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/url"
 	"regexp"
 	"time"
+
+	"golang.org/x/sync/semaphore"
 )
 
 func main() {
-	run()
+	run1()
+}
+
+
+func run1() {
+	ctx := context.TODO()
+	var s *semaphore.Weighted = semaphore.NewWeighted(2)
+	go longProcess1(ctx, s)
+	go longProcess1(ctx, s)
+	go longProcess1(ctx, s)
+	time.Sleep(5 * time.Second)
+}
+
+func longProcess1(ctx context.Context, s *semaphore.Weighted) {
+	if err := s.Acquire(ctx, 1); err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer s.Release(1)
+	fmt.Println("Wait...")
+	time.Sleep(1 * time.Second)
+	fmt.Println("Done")
+}
+
+func parse() {
+	b := []byte(`{"name": "mike", "age": 20, "nicknames": ["a", "b", "c"]}`)
+	var p Person
+	if err := json.Unmarshal(b, &p); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(p.Name, p.Age, p.Nicknames)
+
+	v, _ := json.Marshal(p)
+	fmt.Println(string(v))
+}
+
+type Person struct {
+	Name string
+	Age int
+	Nicknames []string
+}
+
+func http_get() {
+	// resp, _ := http.Get("http://example.com")
+	// defer resp.Body.Close()
+	// body, _ := ioutil.ReadAll(resp.Body)
+	// fmt.Println(string(body))
+
+	base, _ := url.Parse("http://example.com")
+	reference, _ := url.Parse("/test   ?a=1&b=2")
+	endpoint := base.ResolveReference(reference).String()
+	fmt.Println(endpoint)
+}
+
+func test_defer() {
+	defer fmt.Println("test1")
+	defer fmt.Println("test2")
 }
 
 func longProcess(ctx context.Context, ch chan string) {
