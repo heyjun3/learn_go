@@ -1,18 +1,35 @@
 package main
 
 import (
+	"log"
 	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
 	"regexp"
 	"time"
+	"database/sql"
 
 	"golang.org/x/sync/semaphore"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	run1()
+	access()
+}
+
+var DbConnection *sql.DB
+
+func access() {
+	DbConnection, _ := sql.Open("sqlite3", "./example.sql")
+	defer DbConnection.Close()
+	cmd := `CREATE TABLE IF NOT EXISTS person(
+				name STRING,
+				age INT)`
+	_, err := DbConnection.Exec(cmd)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 
