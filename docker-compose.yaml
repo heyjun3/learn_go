@@ -5,3 +5,5 @@ services:
     volumes: 
       - ./:/root/myproject
     entrypoint: tail -f /dev/null
+    environment:
+      - GOPATH=/root/myproject/packages
