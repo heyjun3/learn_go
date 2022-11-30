@@ -7,3 +7,5 @@ services:
     entrypoint: tail -f /dev/null
     environment:
       - GOPATH=/root/myproject/packages
+    ports:
+    - 8080:8080
