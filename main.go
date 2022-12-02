@@ -3,9 +3,10 @@ package main
 import (
 	"regexp"
 	"html/template"
-	"log"
+	// "log"
 	"net/http"
 	"io/ioutil"
+	"fmt"
 )
 
 type Page struct {
@@ -78,8 +79,37 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 }
 
 func main() {
-	http.HandleFunc("/view/", makeHandler(viewHandler))
-	http.HandleFunc("/edit/", makeHandler(editHandler))
-	http.HandleFunc("/save/", makeHandler(saveHandler))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// http.HandleFunc("/view/", makeHandler(viewHandler))
+	// http.HandleFunc("/edit/", makeHandler(editHandler))
+	// http.HandleFunc("/save/", makeHandler(saveHandler))
+	// log.Fatal(http.ListenAndServe(":8080", nil))
+	c := gen(1, 2, 3, 4, 5)
+	out := multi(c)
+	fmt.Println(<-out)
+	fmt.Println(<-out)
+	fmt.Println(<-out)
+	fmt.Println(<-out)
+	fmt.Println(<-out)
+}
+
+func gen(nums ...int) <-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for _, n := range nums {
+			out <- n
+		}
+	}()
+	return out
+}
+
+func multi(in <-chan int) <-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for n := range in {
+			out <- n * n
+		}
+	}()
+	return out
 }
