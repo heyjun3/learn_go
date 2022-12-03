@@ -83,13 +83,11 @@ func main() {
 	// http.HandleFunc("/edit/", makeHandler(editHandler))
 	// http.HandleFunc("/save/", makeHandler(saveHandler))
 	// log.Fatal(http.ListenAndServe(":8080", nil))
-	c := gen(1, 2, 3, 4, 5)
-	out := multi(c)
-	fmt.Println(<-out)
-	fmt.Println(<-out)
-	fmt.Println(<-out)
-	fmt.Println(<-out)
-	fmt.Println(<-out)
+	l := []func(<-chan int)<-chan int{multi, multi, multi}
+	out := reduce(l, 1, 2, 3, 4, 5, 6, 7)
+	for v := range out {
+		fmt.Println(v)
+	}
 }
 
 func gen(nums ...int) <-chan int {
@@ -111,5 +109,17 @@ func multi(in <-chan int) <-chan int {
 			out <- n * n
 		}
 	}()
+	return out
+}
+
+func add[T int](a, b T) T {
+	return a + b
+}
+
+func reduce(fns []func(<-chan int)<-chan int, nums ...int) <-chan int{
+	out := gen(nums...)
+	for _, f := range fns {
+		out = f(out)
+	}
 	return out
 }
