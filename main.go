@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"regexp"
 	"html/template"
 	// "log"
@@ -83,11 +84,13 @@ func main() {
 	// http.HandleFunc("/edit/", makeHandler(editHandler))
 	// http.HandleFunc("/save/", makeHandler(saveHandler))
 	// log.Fatal(http.ListenAndServe(":8080", nil))
-	l := []func(<-chan int)<-chan int{multi, multi, multi}
-	out := reduce(l, 1, 2, 3, 4, 5, 6, 7)
-	for v := range out {
-		fmt.Println(v)
-	}
+	// l := []func(<-chan int)<-chan int{multi, multi, multi}
+	// out := reduce(l, 1, 2, 3, 4, 5, 6, 7)
+	// for v := range out {
+	// 	fmt.Println(v)
+	// }
+	test := os.Getenv("test")
+	fmt.Println(test)
 }
 
 func gen(nums ...int) <-chan int {
