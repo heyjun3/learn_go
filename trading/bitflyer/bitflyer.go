@@ -233,12 +233,12 @@ type Order struct {
 	After int `json:"after"`
 }
 
-type ResponseSendChildOrder struce{
+type ResponseSendChildOrder struct{
 	ChildOrderAcceptanceID string `json:"child_order_acceptance_id"`
 }
 
 func (api *APIClient) SendOrder(order *Order) (*ResponseSendChildOrder, error){
-	date, _ := json.Marshal(order)
+	data, _ := json.Marshal(order)
 	url := "me/sendchildorder"
 	resp, _ := api.doRequest("POST", url, map[string]string{}, data)
 	var response ResponseSendChildOrder
@@ -256,5 +256,5 @@ func (api *APIClient) ListOrder(query map[string]string) ([]Order, error){
 	if err != nil{
 		return nil, err
 	}
-	return &responseListOrder, nil
+	return responseListOrder, nil
 }
