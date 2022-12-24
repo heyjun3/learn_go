@@ -35,18 +35,20 @@ func (c *Candle) TableName() string{
 }
 
 func (c *Candle) Create() error {
-	cmd := fmt.Sprintf("INSERT INTO %s (time, open, close, high, low, volume) VALUES (?, ?, ?, ?, ?", c.TableName())
+	cmd := fmt.Sprintf("INSERT INTO %s (time, open, close, high, low, volume) VALUES (?, ?, ?, ?, ?, ?)", c.TableName())
 	_, err := DbConnection.Exec(cmd, c.Time.Format(time.RFC3339), c.Open, c.Close, c.High, c.Low, c.Volume)
 	if err != nil{
+		fmt.Printf("action=Create, %v", err)
 		return err
 	}
 	return err
 }
 
 func (c *Candle) Save() error {
-	cmd := fmt.Sprintf("UPDATE %s SET open = ?, close = ?, high = ?, low = ?, volume = ?, WHERE time = ?", c.TableName())
+	cmd := fmt.Sprintf("UPDATE %s SET open = ?, close = ?, high = ?, low = ?, volume = ? WHERE time = ?", c.TableName())
 	_, err := DbConnection.Exec(cmd, c.Open, c.Close, c.High, c.Low, c.Volume, c.Time.Format(time.RFC3339))
 	if err != nil{
+		fmt.Printf("action=Save, %v", err)
 		return err
 	}
 	return err
@@ -54,7 +56,7 @@ func (c *Candle) Save() error {
 
 func GetCandle(productCode string, duration time.Duration, dateTime time.Time) *Candle{
 	tableName := GetCandleTableName(productCode, duration)
-	cmd := fmt.Sprintf("SELECT time, open, close, high, low volume FROM %s WHERE time = ?", tableName)
+	cmd := fmt.Sprintf("SELECT time, open, close, high, low, volume FROM %s WHERE time = ?", tableName)
 	row := DbConnection.QueryRow(cmd, dateTime.Format(time.RFC3339))
 	var candle Candle
 	err := row.Scan(&candle.Time, &candle.Open, &candle.Close, &candle.High, &candle.Low, &candle.Volume)
