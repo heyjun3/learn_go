@@ -6,7 +6,6 @@ services:
       - ./:/root/myproject
     entrypoint: tail -f /dev/null
     environment:
-      - GOPATH=/root/myproject/packages
       - TZ=Asia/Tokyo
     ports:
     - 8080:8080
