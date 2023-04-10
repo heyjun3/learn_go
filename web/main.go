@@ -66,3 +66,52 @@ func runJobs(ctx context.Context) error {
 	}
 	return nil
 }
+
+type Command interface {
+    execute(string)
+}
+
+type buttonX struct {}
+
+func (b buttonX) execute(s string) {
+	fmt.Println(s)
+}
+
+type buttonY struct {}
+
+func (b buttonY) execute(s string) {
+	fmt.Println(s)
+}
+
+type buttonA struct {}
+
+func (b buttonA) execute(s string) {
+	fmt.Println(s)
+}
+
+type buttonB struct {}
+
+func (b buttonB) execute(s string) {
+	fmt.Println(s)
+}
+
+func handler(s string) Command {
+	if s == "x" {
+		return buttonX{}
+	} else if s == "y" {
+		return buttonY{}
+	} else if s == "a" {
+		return buttonA{}
+	} else if s == "b" {
+		return buttonB{}
+	} else {
+		return nil
+	}
+}
+
+func test() {
+	c := handler("x")
+	if c != nil {
+		c.execute("test")
+	}
+}
